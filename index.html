@@ -103,8 +103,7 @@ var options = {
 };
 
 if (!items) {
-  alert("missing image.js");
-  return;
+  throw "missing image.js";
 }
 
 var root = document.createElement("div");
