@@ -1,0 +1,23 @@
+#!/bin/sh
+
+set -e
+
+mkdir -p .thumbnails
+
+out='images.js'
+
+echo "var items = ["; > $out
+
+for i in `ls *.jpg`
+do
+  width=$(identify $i | cut -d ' ' -f 3 | cut -d 'x' -f1)
+  height=$(identify $i | cut -d ' ' -f 3 | cut -d 'x' -f2)
+  echo "\t{"              > $out
+  echo "\t\tsrc:'$i',"    > $out
+  echo "\t\tw: $width,"   > $out
+  echo "\t\th: $height"   > $out
+  echo "\t},"             > $out
+  convert $i -resize 300 .thumbnails/$i &
+done
+
+echo "];" > $out
