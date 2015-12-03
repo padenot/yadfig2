@@ -1,6 +1,17 @@
-#!/bin/sh
+#!/bin/bash
 
 set -e
+
+# This finds the location where yadfig itself is stored
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
+  DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+  SOURCE="$(readlink "$SOURCE")"
+  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
+done
+DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+
+echo $DIR
 
 mkdir -p .thumbnails
 
@@ -12,12 +23,15 @@ for i in `ls *.jpg`
 do
   width=$(identify $i | cut -d ' ' -f 3 | cut -d 'x' -f1)
   height=$(identify $i | cut -d ' ' -f 3 | cut -d 'x' -f2)
-  echo "\t{"              >> $out
-  echo "\t\tsrc:'$i',"    >> $out
-  echo "\t\tw: $width,"   >> $out
-  echo "\t\th: $height"   >> $out
-  echo "\t},"             >> $out
-  convert $i -resize 300 .thumbnails/$i &
+  echo -e "\t{"              >> $out
+  echo -e "\t\tsrc:'$i',"    >> $out
+  echo -e "\t\tw: $width,"   >> $out
+  echo -e "\t\th: $height"   >> $out
+  echo -e "\t},"             >> $out
+  convert $i -resize 450 .thumbnails/$i &
 done
 
 echo "];" >> $out
+
+cp $DIR/index.html .
+cp -r $DIR/lib .
