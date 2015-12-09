@@ -133,5 +133,10 @@ for (var i = 0; i < items.length; i++) {
   }
 }
 
+// If this is a link to a particular image, open it in the viewer
+if (location.hash) {
+  var image = parseInt(location.hash.split('&')[2].split('=')[1]);
+  document.querySelectorAll(".picture")[image].click();
+}
 </script>
 </body>
