@@ -113,6 +113,7 @@ document.body.appendChild(root);
 var w = window.innerWidth;
 var itemsPerLine = 4;
 var itemWidth = Math.floor(w / itemsPerLine) - 4;
+var itemHeight = Math.floor(2 * itemWidth / 3);
 
 for (var i = 0; i < items.length; i++) {
   var el = document.createElement("img");
@@ -120,6 +121,7 @@ for (var i = 0; i < items.length; i++) {
   el.index = i;
   el.className = "picture";
   el.style.maxWidth = itemWidth;
+  el.style.maxHeight = itemHeight;
   root.appendChild(el);
 
   el.onclick = function(e) {

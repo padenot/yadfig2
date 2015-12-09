@@ -17,7 +17,7 @@ mkdir -p .thumbnails
 
 out='images.js'
 
-echo "var items = [" >> $out
+echo "var items = [" > $out
 
 for i in `ls *.jpg`
 do
@@ -28,7 +28,8 @@ do
   echo -e "\t\tw: $width,"   >> $out
   echo -e "\t\th: $height"   >> $out
   echo -e "\t},"             >> $out
-  convert $i -resize 450 .thumbnails/$i &
+  >&2 echo "$i" 
+  convert $i -resize 450 .thumbnails/$i
 done
 
 echo "];" >> $out
