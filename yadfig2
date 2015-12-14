@@ -34,5 +34,21 @@ done
 
 echo "];" >> $out
 
+base="`basename $(pwd)`"
+
+echo 'window.addEventListener("load", function() {' >> $out
+echo '  var a = document.createElement("a");' >> $out
+echo "  a.href = \"$base.zip\"" >> $out
+echo '  a.innerHTML = "zip"' >> $out
+echo '  document.body.appendChild(a);' >> $out
+echo '})' >> $out
+
+cd ..
+rm -f $base.zip
+zip $base.zip $base/*.jpg
+mv $base.zip $base
+cd $base
+
+
 cp $DIR/index.html .
 cp -r $DIR/lib .
