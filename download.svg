@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200">
+  <g transform="translate(0 -852.362)" stroke="#fff">
+    <rect width="160" height="160" x="70" y="872.36218" ry="40" fill="none" stroke-width="5.6"/>
+    <path d="M145.45806 895.91218h-27.4v6.25h18.65l-18.65 23.95v6.25h27.4v-6.25h-18.6l18.6-23.95v-6.25m8.31641 0h-7.5v36.45h7.5v-36.45m10.51718 23.45h9.35c6.7 0 11-4.75 11-12.15 0-7.29999-4.15-11.3-11.75-11.3h-16.1v36.45h7.5v-13m0-6.25v-10.95h7c4 0 5.85 1.75001 5.85 5.5 0 3.7-1.85 5.45-5.85 5.45h-7" style="line-height:125%;-inkscape-font-specification:Nimbus Sans L Bold" font-size="50" font-weight="bold" letter-spacing="-4" word-spacing="0" fill="#fff" font-family="Nimbus Sans L"/>
+    <path d="M135 950.34187h30v35h15l-30 30.00003-30-30.00003h15z" fill="#fff"/>
+  </g>
+</svg>

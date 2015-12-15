@@ -1,6 +1,5 @@
 <head>
 <meta charset=utf-8>
-<!-- Core CSS file -->
 <link rel="stylesheet" href="lib/photoswipe.css"> 
 <link rel="stylesheet" href="lib/default-skin/default-skin.css"> 
 <script src="lib/photoswipe.min.js"></script> 
@@ -135,10 +134,21 @@ for (var i = 0; i < items.length; i++) {
   }
 }
 
+var downloadLink = document.createElement("a");
+var download = document.createElement("img");
+download.src = "download.svg";
+download.className = "picture";
+download.style.maxWidth = itemWidth;
+download.style.maxHeight = itemHeight;
+downloadLink.appendChild(download);
+root.appendChild(downloadLink);
+downloadLink.href = galleryName + ".zip";
+
 // If this is a link to a particular image, open it in the viewer
 if (location.hash) {
   var image = parseInt(location.hash.split('&')[2].split('=')[1]);
   document.querySelectorAll(".picture")[image].click();
 }
+
 </script>
 </body>

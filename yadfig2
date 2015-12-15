@@ -36,12 +36,7 @@ echo "];" >> $out
 
 base="`basename $(pwd)`"
 
-echo 'window.addEventListener("load", function() {' >> $out
-echo '  var a = document.createElement("a");' >> $out
-echo "  a.href = \"$base.zip\"" >> $out
-echo '  a.innerHTML = "zip"' >> $out
-echo '  document.body.appendChild(a);' >> $out
-echo '})' >> $out
+echo "var galleryName = \"$base\";" >> $out
 
 cd ..
 rm -f $base.zip
@@ -51,4 +46,5 @@ cd $base
 
 
 cp $DIR/index.html .
+cp $DIR/download.svg .
 cp -r $DIR/lib .
