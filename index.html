@@ -6,7 +6,7 @@
 <script src="lib/photoswipe-ui-default.min.js"></script>
 <script src="images.js"></script>
 <style>
-  .picture {
+  .picture, .centering {
     margin: 0;
     padding: 0;
   }
@@ -23,6 +23,14 @@
     filter: blur(20px);
     -webkit-filter: blur(20px);
   }
+.centering {
+  display: inline-block;
+}
+
+.centering > .picture {
+  margin: 0 auto;
+  display: block;
+}
 </style>
 </head>
 <body>
@@ -111,6 +119,7 @@ document.body.appendChild(root);
 
 var w = window.innerWidth;
 var itemsPerLine = 4;
+var percents = (100 / itemsPerLine) + "%";
 var itemWidth = Math.floor(w / itemsPerLine) - 4;
 var itemHeight = Math.floor(2 * itemWidth / 3);
 
@@ -119,9 +128,20 @@ for (var i = 0; i < items.length; i++) {
   el.src = ".thumbnails/" + items[i].src;
   el.index = i;
   el.className = "picture";
-  el.style.maxWidth = itemWidth;
-  el.style.maxHeight = itemHeight;
-  root.appendChild(el);
+
+  if (items[i].w < items[i].h) {
+    el.style.maxHeight = itemHeight;
+    var centering = document.createElement("div");
+    centering.style.maxWidth = percents;
+    centering.style.minWidth = percents;
+    centering.classList.add("centering");
+    centering.appendChild(el);
+    el.classList.add("box-center");
+    root.appendChild(centering);
+  } else {
+    el.style.maxWidth = percents;
+    root.appendChild(el);
+  }
 
   el.onclick = function(e) {
     options.index = e.target.index;
@@ -138,8 +158,7 @@ var downloadLink = document.createElement("a");
 var download = document.createElement("img");
 download.src = "download.svg";
 download.className = "picture";
-download.style.maxWidth = itemWidth;
-download.style.maxHeight = itemHeight;
+download.style.maxWidth = percents;
 downloadLink.appendChild(download);
 root.appendChild(downloadLink);
 downloadLink.href = galleryName + ".zip";
@@ -148,6 +167,19 @@ downloadLink.href = galleryName + ".zip";
 if (location.hash) {
   var image = parseInt(location.hash.split('&')[2].split('=')[1]);
   document.querySelectorAll(".picture")[image].click();
+}
+
+window.onresize = function() {
+  var elements = document.querySelectorAll(".picture");
+  for (var i = 0; i < elements.length; i++) {
+    w = window.innerWidth;
+    itemsPerLine = 4;
+    percents = (100 / itemsPerLine) + "%";
+    itemWidth = Math.floor(w / itemsPerLine) - 4;
+    itemHeight = Math.floor(2 * itemWidth / 3);
+    elements[i].style.maxHeight = itemHeight;
+  }
+;
 }
 
 </script>
