@@ -11,6 +11,41 @@ while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symli
 done
 DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
+DRY=0
+QUIET=0
+
+usage() {
+  echo $0:
+  echo "    -q: quiet, does not output progress info."
+  echo "    -d: dry, does convert the images into thumbnails"
+  echo "        and does not produce a zip file."
+  echo "    -h: displays this message."
+  exit 1;
+}
+
+while getopts "dqh" opt; do
+  case $opt in
+    d)
+      DRY=1
+      ;;
+    q)
+      QUIET=1
+      ;;
+    \?)
+      usage $0
+      exit 1
+      ;;
+    \h)
+      usage $0
+      exit 0
+      ;;
+    :)
+      echo "Option -$OPTARG requires an argument." >&2
+      exit 1
+      ;;
+  esac
+done
+
 echo $DIR
 
 mkdir -p .thumbnails
@@ -28,8 +63,14 @@ do
   echo -e "\t\tw: $width,"   >> $out
   echo -e "\t\th: $height"   >> $out
   echo -e "\t},"             >> $out
-  >&2 echo "$i" 
-  convert $i -resize 450 .thumbnails/$i
+  if [ $QUIET -ne 1 ] 
+  then
+    >&2 echo "$i" 
+  fi
+  if [ $DRY -ne 1 ] 
+  then
+    convert $i -resize 450 .thumbnails/$i
+  fi
 done
 
 echo "];" >> $out
@@ -38,11 +79,14 @@ base="`basename $(pwd)`"
 
 echo "var galleryName = \"$base\";" >> $out
 
-cd ..
-rm -f $base.zip
-zip $base.zip $base/*.jpg
-mv $base.zip $base
-cd $base
+if [ $DRY -ne 1 ] 
+then
+  cd ..
+  rm -f $base.zip
+  zip $base.zip $base/*.jpg
+  mv $base.zip $base
+  cd $base
+fi
 
 
 cp $DIR/index.html .
