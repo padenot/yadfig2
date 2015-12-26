@@ -20,30 +20,29 @@
   opacity: 0;
 }
 .motion {
-  width: 2em;
-  height: 2em;
+  width: 4em;
+  height: 4em;
   background: rgba(0,0,0,1);
   animation-name: motion;
   animation-duration: 2s;
-  animation-iteration-count: infinite;
-  animation-direction: alternate;
-  border: 2em solid white;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  border: 4em solid white;
   box-sizing: border-box;
   transform-style: perserve-3d;
   perspective: 800;
 }
 @keyframes motion {
   0% {
-    border: 2em solid white;
+    border: 4em solid white;
     border-radius: 100%;
   }
-  25% {
-    border: 2em solid white;
+  29% {
     border-radius: 0%;
     transform: rotate(0deg);
   }
   36% {
-    border: 2em solid white;
+    border: 4em solid white;
   }
   50% {
     transform: rotate(180deg);
@@ -56,10 +55,19 @@
     transform: rotate(270deg);
     border-radius: 100%;
   }
+  80% {
+    transform: rotate3d(1, 2, 0, 180deg);
+    opacity: 1;
+  }
+  90% {
+    border: 0.1em solid white;
+    transform: rotate3d(1, 2, 0, 360deg);
+  }
   100% {
     border-radius: 100%;
     border: 0.1em solid white;
-    transform: rotateX(0deg) rotateY(180deg);
+    transform: rotate3d(1, 1, 0, 360deg);
+    opacity: 0;
   }
 }
 html, body {
@@ -83,6 +91,10 @@ html, body {
   position: relative;
   overflow: hidden;
 }
+.tile:hover .title,.hasmouse {
+  transition: transform 0.3s;
+  transform:translate(0em, 0em);
+}
 .background {
   background-size: cover;
   width: 25vw;
@@ -98,13 +110,20 @@ html, body {
   transition: filter 0.3s;
   -webkit-transition: filter 0.3s;
 }
+.title.hasmouse {
+  transform:translate(0em, -4em);
+}
 .title {
+  background: rgba(0, 0, 0, 0.6);
   display: block;
+  line-height: 2em;
+  width: 100%;
+  padding: 0;
+  margin: 0;
   pointer-events:none;
   position: absolute;
   top: 0em;
-  left: 0.7em;
-  font-size: 1.5em;
+  font-size: 1.1em;
   font-family: 'Nimbus Sans L', 'Helvetica', 'Arial', sans-serif;
   color: white;
   text-shadow: -1px -1px 0px #000,
@@ -116,11 +135,15 @@ html, body {
                 0px  1px 0px #000,
                 1px  1px 0px #000;
   text-align: center;
+  box-sizing: border-box;
 }
 </style>
 <script>
 var fragment = document.createDocumentFragment();
-fetch('photos_list').then((response) => {
+var hasmouse = !("ontouchstart" in document.documentElement);
+console.log(hasmouse);
+
+fetch('/photos_list').then((response) => {
   response.json().then(json => {
     json.forEach(gallery => {
       fetch(gallery+'/images.js').then((response) => {
@@ -135,6 +158,9 @@ fetch('photos_list').then((response) => {
 
           var tile = document.createElement("div");
           tile.classList.add('tile');
+          if (hasmouse) {
+            tile.classList.add("hasmouse");
+          }
 
           var background = document.createElement("div");
           background.classList.add("background");
@@ -142,6 +168,9 @@ fetch('photos_list').then((response) => {
 
           var title = document.createElement("h1");
           title.classList.add("title");
+          if (hasmouse) {
+            title.classList.add("hasmouse");
+          }
           title.innerHTML = gallery;
 
           link.appendChild(tile);
@@ -149,14 +178,14 @@ fetch('photos_list').then((response) => {
           tile.appendChild(title);
           fragment.appendChild(link);
           if (fragment.childElementCount == json.length) {
+            document.body.appendChild(fragment);
             setTimeout(() => {
-             document.body.appendChild(fragment);
              var spinner = document.querySelector(".spinner");
              spinner.classList.add("fadeout");
              spinner.addEventListener("transitionend", () => { spinner.remove(); });
             }, 2000);
           }
-        })
+        });
       });
     });
   });
