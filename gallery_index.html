@@ -1,0 +1,186 @@
+<head>
+<meta charset=utf-8>
+<link rel="stylesheet" href="lib/photoswipe.css"> 
+<link rel="stylesheet" href="lib/default-skin/default-skin.css"> 
+<script src="lib/photoswipe.min.js"></script> 
+<script src="lib/photoswipe-ui-default.min.js"></script>
+<script src="images.js"></script>
+<style>
+  .picture, .centering {
+    margin: 0;
+    padding: 0;
+  }
+  body, html {
+    margin: 0;
+    padding: 0;
+    background-color: black;
+  }
+  .thumbroot {
+    transition: all 0.2s ease-in-out;
+  }
+  .blur {
+    transition: all 0.2s ease-in-out;
+    filter: blur(20px);
+    -webkit-filter: blur(20px);
+  }
+.centering {
+  display: inline-block;
+}
+
+.centering > .picture {
+  margin: 0 auto;
+  display: block;
+}
+</style>
+</head>
+<body>
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader-active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<script>
+var pswpElement = document.querySelectorAll('.pswp')[0];
+
+var options = {
+  spacing: 0.04,
+  preload: [3,3],
+  bgOpacity: 0.3
+};
+
+if (!items) {
+  throw "missing image.js";
+}
+
+var root = document.createElement("div");
+root.className = "thumbroot";
+document.body.appendChild(root);
+
+var w = window.innerWidth;
+var itemsPerLine = 4;
+var percents = (100 / itemsPerLine) + "%";
+var itemWidth = Math.floor(w / itemsPerLine) - 4;
+var itemHeight = Math.floor(2 * itemWidth / 3);
+
+for (var i = 0; i < items.length; i++) {
+  var el = document.createElement("img");
+  el.src = ".thumbnails/" + items[i].src;
+  el.index = i;
+  el.className = "picture";
+
+  if (items[i].w < items[i].h) {
+    el.style.maxHeight = itemHeight;
+    var centering = document.createElement("div");
+    centering.style.maxWidth = percents;
+    centering.style.minWidth = percents;
+    centering.classList.add("centering");
+    centering.appendChild(el);
+    el.classList.add("box-center");
+    root.appendChild(centering);
+  } else {
+    el.style.maxWidth = percents;
+    root.appendChild(el);
+  }
+
+  el.onclick = function(e) {
+    options.index = e.target.index;
+    var gallery = new PhotoSwipe( pswpElement, PhotoSwipeUI_Default, items, options);
+    root.classList.add('blur');
+    gallery.init();
+    gallery.listen('destroy', function() { 
+      root.classList.remove('blur');
+    });
+  }
+}
+
+var downloadLink = document.createElement("a");
+var download = document.createElement("img");
+download.src = "download.svg";
+download.className = "picture";
+download.style.maxWidth = percents;
+downloadLink.appendChild(download);
+root.appendChild(downloadLink);
+downloadLink.href = galleryName + ".zip";
+
+// If this is a link to a particular image, open it in the viewer
+if (location.hash) {
+  var image = parseInt(location.hash.split('&')[2].split('=')[1]);
+  document.querySelectorAll(".picture")[image].click();
+}
+
+window.onresize = function() {
+  var elements = document.querySelectorAll(".picture");
+  for (var i = 0; i < elements.length; i++) {
+    w = window.innerWidth;
+    itemsPerLine = 4;
+    percents = (100 / itemsPerLine) + "%";
+    itemWidth = Math.floor(w / itemsPerLine) - 4;
+    itemHeight = Math.floor(2 * itemWidth / 3);
+    elements[i].style.maxHeight = itemHeight;
+  }
+;
+}
+
+</script>
+</body>

@@ -89,6 +89,6 @@ then
 fi
 
 
-cp $DIR/index.html .
+cp $DIR/gallery_index.html ./index.html
 cp $DIR/download.svg .
 cp -r $DIR/lib .
