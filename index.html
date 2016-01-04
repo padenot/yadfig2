@@ -1,3 +1,5 @@
+<script
+src=https://cdnjs.cloudflare.com/ajax/libs/fetch/0.10.1/fetch.min.js></script>
 <meta charset=utf-8>
 <style>
 .spinner {
@@ -102,16 +104,17 @@ html, body {
   padding:0;
   margin:0;
   transition: filter 0.3s;
-  -webkit-transition: filter 0.3s;
+  -webkit-transition: -webkit-filter 0.3s;
 }
 .background:hover {
   filter: brightness(210%) blur(3px);
   -webkit-filter: brightness(210%) blur(3px);
   transition: filter 0.3s;
-  -webkit-transition: filter 0.3s;
+  -webkit-transition: -webkit-filter 0.3s;
 }
 .title.hasmouse {
   transform:translate(0em, -4em);
+  z-index: 2;
 }
 .title {
   background: rgba(0, 0, 0, 0.6);
@@ -142,11 +145,11 @@ html, body {
 var hasmouse = !("ontouchstart" in document.documentElement);
 var images = [];
 
-fetch('/photos_list').then((response) => {
-  response.json().then(json => {
-    json.forEach(gallery => {
-      fetch(gallery+'/images.js').then((response) => {
-        response.text().then((text) => {
+fetch('/photos_list').then(function(response) {
+  response.json().then(function(json) {
+    json.forEach(function(gallery) {
+      fetch(gallery+'/images.js').then(function(response) {
+        response.text().then(function(text) {
           var matches = text.match(/src:'(.*)',/);
           var image_name = "";
           if (matches && matches.length > 1) {
@@ -177,7 +180,7 @@ fetch('/photos_list').then((response) => {
           tile.appendChild(background);
           images.push(link);
           if (images.length == json.length) {
-            images = images.sort((a, b) => {
+            images = images.sort(function(a, b) {
               var first = a.firstChild.firstChild.innerHTML.toLowerCase(),
                   second = b.firstChild.firstChild.innerHTML.toLowerCase();
               if (a < b) {
@@ -187,13 +190,13 @@ fetch('/photos_list').then((response) => {
               }
               return 0;
             }).reverse();
-            images.forEach((element) => {
+            images.forEach(function(element) {
               document.body.appendChild(element);
             });
-            setTimeout(() => {
+            setTimeout(function() {
              var spinner = document.querySelector(".spinner");
              spinner.classList.add("fadeout");
-             spinner.addEventListener("transitionend", () => { spinner.remove(); });
+             spinner.addEventListener("transitionend", function() { spinner.remove(); });
             }, 2000);
           }
         });
