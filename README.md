@@ -4,9 +4,9 @@
 
 ## How to use it?
 
-#. Clone it
-#. Create a repository with your gallery pictures
-#. From that directory run ``../yadfig2``
+1. Clone it
+2. Create a repository with your gallery pictures
+3. From that directory run ``../yadfig2``
 
 It will generate a zip, the thumbnails as well as a standalone lib.
 
