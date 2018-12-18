@@ -61,10 +61,10 @@ out='images.js'
 
 echo "var items = [" > $out
 
-for i in `ls *.jpg`
+for i in *.jpg
 do
-  width=$(identify $i | cut -d ' ' -f 3 | cut -d 'x' -f1)
-  height=$(identify $i | cut -d ' ' -f 3 | cut -d 'x' -f2)
+  width=$(identify "$i" | grep -oe " [[:digit:]]*x[[:digit:]]* " | cut -d ' ' -f 2 | cut -d 'x' -f1)
+  height=$(identify "$i" | grep -oe " [[:digit:]]*x[[:digit:]]* " | cut -d ' ' -f 2 | cut -d 'x' -f2)
   echo -e "\t{"              >> $out
   echo -e "\t\tsrc:'$i',"    >> $out
   echo -e "\t\tw: $width,"   >> $out
