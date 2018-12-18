@@ -1,6 +1,13 @@
 #!/bin/bash
 
-set -e
+set -ex
+
+PARALLEL=`which parallel`
+if [ -z $PARALLEL ]
+then
+  echo "Needs GNU parallel"
+  exit 1
+fi
 
 # This finds the location where yadfig itself is stored
 SOURCE="${BASH_SOURCE[0]}"
@@ -67,11 +74,12 @@ do
   then
     >&2 echo "$i" 
   fi
-  if [ $DRY -ne 1 ] 
-  then
-    convert $i -resize 450 .thumbnails/$i
-  fi
 done
+
+if [ $DRY -ne 1 ] 
+then
+  parallel convert {} -resize 450 .thumbnails/{} ::: *.jpg
+fi
 
 echo "];" >> $out
 
