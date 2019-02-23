@@ -7,6 +7,20 @@ then
   exit 1
 fi
 
+
+# https://askubuntu.com/questions/53770/how-can-i-encode-and-decode-percent-encoded-strings-on-the-command-line
+urlencode() {
+    # urlencode <string>
+    local length="${#1}"
+    for (( i = 0; i < length; i++ )); do
+        local c="${1:i:1}"
+        case $c in
+            [a-zA-Z0-9.~_-]) printf "$c" ;;
+            *) printf '%%%02X' "'$c"
+        esac
+    done
+}
+
 # This finds the location where chic itself is stored
 SOURCE="${BASH_SOURCE[0]}"
 while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
@@ -133,14 +147,16 @@ $first-$i-quarter.jpg 600w\" sizes=\"(max-width: 600px) \
 src=\"$first-$i.jpg\">" >> index.html
 done
 
-echo "<a id=zip href=\"$first.zip\">zip</a>" >> index.html
+encoded=`urlencode "$title.zip"`
+
+echo "<a id=zip href=\"$encoded\">zip</a>" >> index.html
 echo "</div>" >> index.html
 echo "</body>" >> index.html
 echo "</html>" >> index.html
 
 mkdir "$title"
 mv *.jpg "$title"
-zip "$title".zip  "$title"/*
+zip "$title.zip"  "$title"/*
 mv "$title"/*.jpg .
 rmdir "$title"
 
