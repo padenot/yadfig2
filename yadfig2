@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -ex
+set -e
 
 PARALLEL=`which parallel`
 if [ -z $PARALLEL ]
@@ -63,12 +63,16 @@ echo "var items = [" > $out
 
 for i in *.jpg
 do
-  width=$(identify "$i" | grep -oe " [[:digit:]]*x[[:digit:]]* " | cut -d ' ' -f 2 | cut -d 'x' -f1)
-  height=$(identify "$i" | grep -oe " [[:digit:]]*x[[:digit:]]* " | cut -d ' ' -f 2 | cut -d 'x' -f2)
+  filename="${i%.*}"
+  wh=$(identify "$i" | grep -oe " [[:digit:]]*x[[:digit:]]* " | cut -d ' ' -f 2)
+  width=$(echo "$wh" | cut -d 'x' -f1)
+  height=$(echo "$wh" | cut -d 'x' -f2)
   echo -e "\t{"              >> $out
   echo -e "\t\tsrc:'$i',"    >> $out
+  echo -e "\t\tsrcset:'$i',"    >> $out
   echo -e "\t\tw: $width,"   >> $out
-  echo -e "\t\th: $height"   >> $out
+  echo -e "\t\th: $height,"   >> $out
+  echo -e "\t\tsrcset: \"$i 2000w, 1280/$filename-1280.jpg 1280w, 640/$filename-640.jpg 640w\"" >> $out
   echo -e "\t},"             >> $out
   if [ $QUIET -ne 1 ] 
   then
@@ -76,9 +80,13 @@ do
   fi
 done
 
+mkdir -p 1280 640
+
 if [ $DRY -ne 1 ] 
 then
   parallel convert {} -resize 450 .thumbnails/{} ::: *.jpg
+  find . -name "*.jpg" ! -path "./.thumbnails/*" ! -path "./1280/*" ! -path "./640/*" | parallel -v --eta "convert {} -resize \"1280x1280>\" 1280/{.}-1280.jpg"
+  find . -name "*.jpg" ! -path "./.thumbnails/*" ! -path "./1280/*" ! -path "./640/*" | parallel -v --eta "convert {} -resize \"640x640>\" 640/{.}-640.jpg"
 fi
 
 echo "];" >> $out
