@@ -138,8 +138,9 @@ cat >> index.html << HEREDOC
 HEREDOC
 
 
-for i in $(seq -f "%05g" 1 $count)
+for i in $(seq -f "%04g" 1 $count)
 do
+  echo $i
   echo "<img srcset=\"$first-$i.jpg 2000w, \
 $first-$i-half.jpg 1500w, \
 $first-$i-quarter.jpg 600w\" sizes=\"(max-width: 600px) \

@@ -140,7 +140,7 @@ html, body {
 var hasmouse = !("ontouchstart" in document.documentElement);
 var images = [];
 
-fetch('/photos_list').then(function(response) {
+fetch('photos_list').then(function(response) {
   response.json().then(function(json) {
     json.forEach(function(gallery) {
       fetch(gallery+'/images.js').then(function(response) {
