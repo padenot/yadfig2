@@ -9,6 +9,7 @@ body, html {
   margin: 0;
   padding: 0;
   background-color: black;
+  font-family: sans-serif;
 }
 .thumbroot {
   transition: all 0.2s ease-in-out;
@@ -17,9 +18,20 @@ body, html {
   align-items: center;
 }
 .thumbroot > img {
-  max-width: 20vw;
-  max-height: 20vh;
-  border: 5px solid black;
+  padding: 4px;
+  height: 250px;
+  background: #000;
+  color: white;
+  -margin: 0 1rem 1rem 0;
+  text-align: center;
+  font-family: system-ui;
+  font-weight: 900;
+  font-size: 2rem;
+  flex: 1 0 auto;
+  object-fit: cover;
+}
+.thumbroot > img:nth-last-child(2) {
+  max-width: 25vw;
 }
 .blur {
   transition: all 0.2s ease-in-out;
@@ -70,6 +82,7 @@ var itemsPerLine = 4;
 var percents = (100 / itemsPerLine) + "%";
 var itemWidth = Math.floor(w / itemsPerLine) - 4;
 var itemHeight = Math.floor(2 * itemWidth / 3);
+var base = 1;
 
 for (var i = 0; i < items.length; i++) {
   var el = document.createElement("img");
@@ -77,6 +90,7 @@ for (var i = 0; i < items.length; i++) {
   el.index = i;
   el.className = "picture";
   root.appendChild(el);
+  el.style.width = 25 + ((base++ * 111333) % 20) - 5+ "vh";
 
   el.onclick = function(e) {
     lightbox.loadAndOpen(e.target.index);
